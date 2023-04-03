@@ -16,6 +16,9 @@ func InitRouterAndServe() {
 
 	//健康检查
 	r.GET("ping", api.Ping)
+	//健康检查
+	r.POST("/user/register", api.Register)
+	r.POST("/user/login", api.Login)
 
 	// 启动server
 	port := config.GetGlobalConf().App.Port

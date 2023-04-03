@@ -30,7 +30,8 @@ func Register(c *gin.Context) {
 		return
 	}
 	if err := service.Register(req); err != nil {
-		rsp.ResponseWithError(c, CodeRegisterErr, "register err")
+		rsp.ResponseWithError(c, CodeRegisterErr, err.Error())
+		return
 	}
 	rsp.ResponseSuccess(c)
 }
@@ -47,6 +48,7 @@ func Login(c *gin.Context) {
 	}
 	if err := service.Login(req); err != nil {
 		rsp.ResponseWithError(c, CodeLoginErr, "login err")
+		return
 	}
 	rsp.ResponseSuccess(c)
 }

@@ -24,7 +24,9 @@ func GetUserByName(name string) (*model.User, error) {
 // CreateUser 创建一个用户
 func CreateUser(user *model.User) error {
 	if err := utils.GetDB().Model(&model.User{}).Create(user).Error; err != nil {
+		log.Errorf("CreateUser fail: %v", err)
 		return fmt.Errorf("CreateUser fail: %v", err)
 	}
+	log.Infof("insert success")
 	return nil
 }

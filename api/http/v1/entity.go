@@ -29,7 +29,7 @@ type HttpResponse struct {
 func (rsp *HttpResponse) ResponseWithError(c *gin.Context, code ErrCode, msg string) {
 	rsp.Code = code
 	rsp.Msg = msg
-	c.JSON(http.StatusOK, rsp)
+	c.JSON(http.StatusInternalServerError, rsp)
 }
 
 func (rsp *HttpResponse) ResponseSuccess(c *gin.Context) {
