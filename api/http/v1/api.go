@@ -6,7 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 	"net/http"
-	"user_system/internal/config"
+	"user_system/config"
+	"user_system/internal/service"
 )
 
 // Ping 健康检查
@@ -18,16 +19,34 @@ func Ping(c *gin.Context) {
 	c.String(http.StatusOK, appInfo)
 }
 
-// Login 登录
+// Register 注册
 func Register(c *gin.Context) {
-	req := &RegisterRequest{}
+	req := &service.RegisterRequest{}
 	rsp := &HttpResponse{}
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
 		log.Errorf("request json err %v", err)
-		rsp.ResponseWithError(c, ErrBodyBindCode, err.Error())
+		rsp.ResponseWithError(c, CodeBodyBindErr, err.Error())
 		return
 	}
-	servce.
-	if req.Name == "" || req.Age <=0 || req.Gender
+	if err := service.Register(req); err != nil {
+		rsp.ResponseWithError(c, CodeRegisterErr, "register err")
+	}
+	rsp.ResponseSuccess(c)
+}
+
+// Login 注册
+func Login(c *gin.Context) {
+	req := &service.LoginRequest{}
+	rsp := &HttpResponse{}
+	err := c.ShouldBindJSON(&req)
+	if err != nil {
+		log.Errorf("request json err %v", err)
+		rsp.ResponseWithError(c, CodeBodyBindErr, err.Error())
+		return
+	}
+	if err := service.Login(req); err != nil {
+		rsp.ResponseWithError(c, CodeLoginErr, "login err")
+	}
+	rsp.ResponseSuccess(c)
 }

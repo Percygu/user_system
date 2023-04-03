@@ -1,7 +1,11 @@
 package config
 
 import (
+	rlog "github.com/lestrrat-go/file-rotatelogs"
+	log "github.com/sirupsen/logrus"
+	"os"
 	"sync"
+	"time"
 
 	"github.com/spf13/viper"
 )
@@ -39,9 +43,9 @@ type AppConf struct {
 	RunMode string `yaml:"run_mode" mapstructure:"run_mode"` // 运行模式
 }
 
-// CacheConfig 业务配置结构体
+// GlobalConfig 业务配置结构体
 type GlobalConfig struct {
-	App        AppConf  `yaml:"api" mapstructure:"api"`
+	App        AppConf  `yaml:"app" mapstructure:"app"`
 	CorsOrigin []string `yaml:"cors_origin" mapstructure:"cors_origin"` // 跨域源列表
 	Db         DbConf   `yaml:"db" mapstructure:"db"`                   // db配置
 	Log        LogConf  `yaml:"log" mapstructure:"log"`                 // 日志配置
@@ -54,11 +58,10 @@ func GetGlobalConf() *GlobalConfig {
 }
 
 func readConf() {
-	viper.SetConfigName("config")
-	viper.SetConfigType("yaml")
+	viper.SetConfigName("app")
+	viper.SetConfigType("yml")
 	viper.AddConfigPath(".")
 	viper.AddConfigPath("./conf")
-	viper.AddConfigPath("../../")
 	err := viper.ReadInConfig()
 	if err != nil {
 		panic("read config file err:" + err.Error())
@@ -66,5 +69,45 @@ func readConf() {
 	err = viper.Unmarshal(&config)
 	if err != nil {
 		panic("config file unmarshal err:" + err.Error())
+	}
+	log.Infof("config === %+v", config)
+}
+
+// InitConfig 初始化日志
+func InitConfig() {
+	globalConf := GetGlobalConf()
+	// 设置日志级别
+	level, err := log.ParseLevel(globalConf.Log.Level)
+	if err != nil {
+		panic("log level parse err:" + err.Error())
+	}
+	// 设置日志格式为json格式
+	log.SetFormatter(&logFormatter{
+		log.TextFormatter{
+			DisableColors:   true,
+			TimestampFormat: "2006-01-02 15:04:05",
+			FullTimestamp:   true,
+		}})
+	log.SetReportCaller(true) // 打印文件位置，行号
+	log.SetLevel(level)
+	switch globalConf.Log.LogPattern {
+	case "stdout":
+		log.SetOutput(os.Stdout)
+	case "stderr":
+		log.SetOutput(os.Stderr)
+	case "file":
+		logger, err := rlog.New(
+			globalConf.Log.LogPath+".%Y%m%d",
+			//rlog.WithLinkName(globalConf.LogConf.LogPath),
+			rlog.WithRotationCount(globalConf.Log.SaveDays),
+			//rlog.WithMaxAge(time.Minute*3),
+			rlog.WithRotationTime(time.Hour*24),
+		)
+		if err != nil {
+			panic("log conf err: " + err.Error())
+		}
+		log.SetOutput(logger)
+	default:
+		panic("log conf err, check log_pattern in logsvr.yaml")
 	}
 }

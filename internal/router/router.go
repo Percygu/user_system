@@ -1,12 +1,11 @@
 package router
 
 import (
-	"strconv"
-	api "user_system/api/http/v1"
-	"user_system/internal/config"
-
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
+	"strconv"
+	api "user_system/api/http/v1"
+	"user_system/config"
 )
 
 // InitRouterAndServe 路由配置、启动服务

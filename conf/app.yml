@@ -2,7 +2,7 @@ cors_origin:
   - "*.trovo.live" # 允许跨域访问列表，如果要允许所有域名访问，设置为*即可，此设置只应用于独立http请求
 
 app:
-  app_name: "tab_mobile_cache_cloud" # 应用名称
+  app_name: "user_system" # 应用名称
   version: "v1.0.1" # 版本
   port: 8080    # 服务启用端口
   run_mode: release # 可选dev、release模式
@@ -12,7 +12,7 @@ db:
   port: 8086          # port
   user: "root"        # user
   password: "123456"  # password
-  dbname: "abt"    # dbname
+  dbname: "camps_user"    # dbname
   max_idle_conn: 5    # 最大空闲连接数
   max_open_conn: 20   # 最大连接数
   max_idle_time: 300  # 最大空闲时间

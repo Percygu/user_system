@@ -1,7 +1,17 @@
 package main
 
-import "fmt"
+import (
+	log "github.com/sirupsen/logrus"
+	"user_system/config"
+	"user_system/internal/router"
+)
+
+func Init() {
+	config.InitConfig()
+}
 
 func main() {
-	fmt.Printf("hello world")
+	Init()
+	log.Info("111111111111")
+	router.InitRouterAndServe()
 }
