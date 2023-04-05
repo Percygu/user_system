@@ -17,7 +17,7 @@ var (
 
 // openDB 连接db
 func openDB() {
-	mysqlConf := config.GetGlobalConf().Db
+	mysqlConf := config.GetGlobalConf().DbConfig
 	connArgs := fmt.Sprintf("%s:%s@(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", mysqlConf.User,
 		mysqlConf.Password, mysqlConf.Host, mysqlConf.Port, mysqlConf.Dbname)
 	log.Info("mdb addr:" + connArgs)

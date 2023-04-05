@@ -43,12 +43,27 @@ type AppConf struct {
 	RunMode string `yaml:"run_mode" mapstructure:"run_mode"` // 运行模式
 }
 
+// RedisConf 配置
+type RedisConf struct {
+	Addr     string `yaml:"addr" mapstructure:"addr"`
+	DB       int    `yaml:"db" mapstructure:"db"`
+	PassWord string `yaml:"passwd" mapstructure:"passwd"`
+	PoolSize int    `yaml:"poolsize" mapstructure:"poolsize"`
+}
+
+type Cache struct {
+	TokenExpired int `yaml:"tokenexpired" mapstructure:"tokenexpired"`
+	UserExpired  int `yaml:"userexpired" mapstructure:"userexpired"`
+}
+
 // GlobalConfig 业务配置结构体
 type GlobalConfig struct {
-	App        AppConf  `yaml:"app" mapstructure:"app"`
-	CorsOrigin []string `yaml:"cors_origin" mapstructure:"cors_origin"` // 跨域源列表
-	Db         DbConf   `yaml:"db" mapstructure:"db"`                   // db配置
-	Log        LogConf  `yaml:"log" mapstructure:"log"`                 // 日志配置
+	AppConfig   AppConf   `yaml:"app" mapstructure:"app"`
+	CorsOrigin  []string  `yaml:"cors_origin" mapstructure:"cors_origin"` // 跨域源列表
+	DbConfig    DbConf    `yaml:"db" mapstructure:"db"`                   // db配置
+	LogConfig   LogConf   `yaml:"log" mapstructure:"log"`                 // 日志配置
+	RedisConfig RedisConf `yaml:"redis" mapstructure:"redis"`             // redis配置
+	Cache       Cache     `yaml:"cache" mapstructure:"cache"`             // cache配置
 }
 
 // GetGlobalConf 获取全局配置文件

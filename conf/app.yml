@@ -17,6 +17,17 @@ db:
   max_open_conn: 20   # 最大连接数
   max_idle_time: 300  # 最大空闲时间
 
+redis:
+  addr: localhost:6379
+  db: 1
+  passwd: ''
+  poolsize: 100
+   
+cache:
+  tokenexpired: 7200 # second
+  userexpired: 300  # second
+
+
 log:
   log_pattern: file # 可选stdout, stderr, file模式
   log_path: ./log/server.log # 日志路径
