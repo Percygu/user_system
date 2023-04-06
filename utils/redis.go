@@ -1,10 +1,11 @@
 package utils
 
 import (
+	"fmt"
+	"github.com/redis/go-redis/v9"
+	"golang.org/x/net/context"
 	"sync"
 	"user_system/config"
-
-	"github.com/go-redis/redis"
 )
 
 var (
@@ -15,8 +16,9 @@ var (
 // openDB 连接db
 func initRedis() {
 	redisConfig := config.GetGlobalConf().RedisConfig
+	addr := fmt.Sprintf("%s:%d", redisConfig.Host, redisConfig.Port)
 	redisConn = redis.NewClient(&redis.Options{
-		Addr:     redisConfig.Addr,
+		Addr:     addr,
 		Password: redisConfig.PassWord,
 		DB:       redisConfig.DB,
 		PoolSize: redisConfig.PoolSize,
@@ -25,7 +27,7 @@ func initRedis() {
 		panic("failed to call redis.NewClient")
 	}
 
-	_, err := redisConn.Ping().Result()
+	_, err := redisConn.Ping(context.Background()).Result()
 	if err != nil {
 		panic("Failed to ping redis, err:%s")
 	}

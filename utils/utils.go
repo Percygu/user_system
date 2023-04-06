@@ -22,10 +22,10 @@ func Md5String(s string) string {
 	return str
 }
 
-//func GenerateToken(uname string) string {
+//func GenerateSession(uname string) string {
 //    return Md5String(fmt.Sprintf("%s:%d", uname, rand.Intn(999999)))
 //}
 
-func GenerateToken(uname string) string {
-	return Md5String(fmt.Sprintf("%s:%s", uname, "token"))
+func GenerateSession(userName string) string {
+	return Md5String(fmt.Sprintf("%s:%s", userName, "session"))
 }

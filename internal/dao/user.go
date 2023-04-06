@@ -30,3 +30,8 @@ func CreateUser(user *model.User) error {
 	log.Infof("insert success")
 	return nil
 }
+
+// UpdateUserInfo 更新昵称
+func UpdateUserInfo(userName string, user *model.User) int64 {
+	return utils.GetDB().Model(&model.User{}).Where("`name` = ?", userName).Updates(user).RowsAffected
+}

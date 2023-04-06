@@ -1,14 +1,16 @@
 package v1
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
-	"golang.org/x/net/context"
 	"net/http"
+	"time"
 	"user_system/config"
 	"user_system/internal/service"
+	"user_system/pkg/constant"
 	"user_system/utils"
 )
 
@@ -38,7 +40,7 @@ func Register(c *gin.Context) {
 	rsp.ResponseSuccess(c)
 }
 
-// Login 登陆
+// Login 登录
 func Login(c *gin.Context) {
 	req := &service.LoginRequest{}
 	rsp := &HttpResponse{}
@@ -49,18 +51,44 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	uuid := utils.GenerateToken(req.UserName)
+	uuid := utils.Md5String(req.UserName + time.Now().GoString())
 	ctx := context.WithValue(context.Background(), "uuid", uuid)
 	log.Infof("loggin start,user:%s, password:%s", req.UserName, req.PassWord)
-	if err := service.Login(ctx, req); err != nil {
+	session, err := service.Login(ctx, req)
+	if err != nil {
 		rsp.ResponseWithError(c, CodeLoginErr, "login err")
+		return
+	}
+	// 登陆成功，设置cookie
+	c.SetCookie(constant.SessionKey, session, constant.CookieExpire, "/", "", false, true)
+	rsp.ResponseSuccess(c)
+}
+
+// Logout 登出
+func Logout(c *gin.Context) {
+	session, _ := c.Cookie(constant.SessionKey)
+	ctx := context.WithValue(context.Background(), constant.SessionKey, session)
+	req := &service.LogoutRequest{}
+	rsp := &HttpResponse{}
+	err := c.ShouldBindJSON(req)
+	if err != nil {
+		log.Errorf("bind get logout request json err %v", err)
+		rsp.ResponseWithError(c, CodeBodyBindErr, err.Error())
+		return
+	}
+	uuid := utils.Md5String(req.UserName + time.Now().GoString())
+	ctx = context.WithValue(context.Background(), "uuid", uuid)
+	if err := service.Logout(ctx, req); err != nil {
+		rsp.ResponseWithError(c, CodeLogoutErr, err.Error())
 		return
 	}
 	rsp.ResponseSuccess(c)
 }
 
+// GetUserInfo 获取用户信息
 func GetUserInfo(c *gin.Context) {
-	token := c.Header["token"]
+	session, _ := c.Cookie(constant.SessionKey)
+	ctx := context.WithValue(context.Background(), constant.SessionKey, session)
 	req := &service.GetUserInfoRequest{}
 	rsp := &HttpResponse{}
 	err := c.ShouldBindJSON(req)
@@ -69,8 +97,8 @@ func GetUserInfo(c *gin.Context) {
 		rsp.ResponseWithError(c, CodeBodyBindErr, err.Error())
 		return
 	}
-	uuid := utils.GenerateToken(req.UserName)
-	ctx := context.WithValue(context.Background(), "uuid", uuid)
+	uuid := utils.Md5String(req.UserName + time.Now().GoString())
+	ctx = context.WithValue(ctx, "uuid", uuid)
 	userInfo, err := service.GetUserInfo(ctx, req)
 	if err != nil {
 		rsp.ResponseWithError(c, CodeGetUserInfoErr, err.Error())
@@ -79,6 +107,7 @@ func GetUserInfo(c *gin.Context) {
 	rsp.ResponseWithData(c, userInfo)
 }
 
+// UpdateUserInfo 更新用户信息
 func UpdateUserInfo(c *gin.Context) {
 	req := &service.UpdateUserInfoRequest{}
 	rsp := &HttpResponse{}
@@ -88,7 +117,10 @@ func UpdateUserInfo(c *gin.Context) {
 		rsp.ResponseWithError(c, CodeBodyBindErr, err.Error())
 		return
 	}
-	uuid := utils.GenerateToken(req.UserName)
+	uuid := utils.Md5String(req.UserName + time.Now().GoString())
 	ctx := context.WithValue(context.Background(), "uuid", uuid)
-
+	if err := service.UpdateUserInfo(ctx, req); err != nil {
+		rsp.ResponseWithError(c, CodeUpdateUserInfoErr, err.Error())
+		return
+	}
 }

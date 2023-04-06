@@ -18,14 +18,15 @@ db:
   max_idle_time: 300  # 最大空闲时间
 
 redis:
-  addr: localhost:6379
-  db: 1
+  rhost: "121.43.102.177"
+  raport: 6379
+  rdb: 1
   passwd: ''
   poolsize: 100
    
 cache:
-  tokenexpired: 7200 # second
-  userexpired: 300  # second
+  session_expired: 7200 # second
+  user_expired: 300  # second
 
 
 log:

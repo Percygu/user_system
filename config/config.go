@@ -45,15 +45,16 @@ type AppConf struct {
 
 // RedisConf 配置
 type RedisConf struct {
-	Addr     string `yaml:"addr" mapstructure:"addr"`
-	DB       int    `yaml:"db" mapstructure:"db"`
+	Host     string `yaml:"rhost" mapstructure:"rhost"` // db主机地址
+	Port     string `yaml:"rport" mapstructure:"rport"` // db端口
+	DB       int    `yaml:"rdb" mapstructure:"rdb"`
 	PassWord string `yaml:"passwd" mapstructure:"passwd"`
 	PoolSize int    `yaml:"poolsize" mapstructure:"poolsize"`
 }
 
 type Cache struct {
-	TokenExpired int `yaml:"tokenexpired" mapstructure:"tokenexpired"`
-	UserExpired  int `yaml:"userexpired" mapstructure:"userexpired"`
+	SessionExpired int `yaml:"session_expired" mapstructure:"session_expired"`
+	UserExpired    int `yaml:"user_expired" mapstructure:"user_expired"`
 }
 
 // GlobalConfig 业务配置结构体
@@ -92,7 +93,7 @@ func readConf() {
 func InitConfig() {
 	globalConf := GetGlobalConf()
 	// 设置日志级别
-	level, err := log.ParseLevel(globalConf.Log.Level)
+	level, err := log.ParseLevel(globalConf.LogConfig.Level)
 	if err != nil {
 		panic("log level parse err:" + err.Error())
 	}
@@ -105,16 +106,16 @@ func InitConfig() {
 		}})
 	log.SetReportCaller(true) // 打印文件位置，行号
 	log.SetLevel(level)
-	switch globalConf.Log.LogPattern {
+	switch globalConf.LogConfig.LogPattern {
 	case "stdout":
 		log.SetOutput(os.Stdout)
 	case "stderr":
 		log.SetOutput(os.Stderr)
 	case "file":
 		logger, err := rlog.New(
-			globalConf.Log.LogPath+".%Y%m%d",
+			globalConf.LogConfig.LogPath+".%Y%m%d",
 			//rlog.WithLinkName(globalConf.LogConf.LogPath),
-			rlog.WithRotationCount(globalConf.Log.SaveDays),
+			rlog.WithRotationCount(globalConf.LogConfig.SaveDays),
 			//rlog.WithMaxAge(time.Minute*3),
 			rlog.WithRotationTime(time.Hour*24),
 		)

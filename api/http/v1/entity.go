@@ -6,13 +6,14 @@ import (
 )
 
 const (
-	CodeSuccess        ErrCode = 0     // http请求成功
-	CodeBodyBindErr    ErrCode = 10001 // 参数绑定错误
-	CodeParamErr       ErrCode = 10002 // 请求参数不合法
-	CodeRegisterErr    ErrCode = 10003 // 注册错误
-	CodeLoginErr       ErrCode = 10003 // 登录错误
-	CodeLogoutErr      ErrCode = 10004 // 登出错误
-	CodeGetUserInfoErr ErrCode = 10005 // 获取用户信息错误
+	CodeSuccess           ErrCode = 0     // http请求成功
+	CodeBodyBindErr       ErrCode = 10001 // 参数绑定错误
+	CodeParamErr          ErrCode = 10002 // 请求参数不合法
+	CodeRegisterErr       ErrCode = 10003 // 注册错误
+	CodeLoginErr          ErrCode = 10003 // 登录错误
+	CodeLogoutErr         ErrCode = 10004 // 登出错误
+	CodeGetUserInfoErr    ErrCode = 10005 // 获取用户信息错误
+	CodeUpdateUserInfoErr ErrCode = 10006 // 更新用户信息错误
 )
 
 type (

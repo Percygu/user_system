@@ -2,9 +2,9 @@ package cache
 
 import (
 	"encoding/json"
+	"golang.org/x/net/context"
 	"time"
 	"user_system/config"
-
 	"user_system/internal/model"
 	"user_system/pkg/constant"
 	"user_system/utils"
@@ -12,7 +12,7 @@ import (
 
 func GetUserInfoFromCache(username string) (*model.User, error) {
 	redisKey := constant.UserInfoPrefix + username
-	val, err := utils.GetRedisCli().Get(redisKey).Result()
+	val, err := utils.GetRedisCli().Get(context.Background(), redisKey).Result()
 	if err != nil {
 		return nil, err
 	}
@@ -28,22 +28,22 @@ func SetUserCacheInfo(user *model.User) error {
 		return err
 	}
 	expired := time.Second * time.Duration(config.GetGlobalConf().Cache.UserExpired)
-	_, err = utils.GetRedisCli().Set(redisKey, val, expired).Result()
+	_, err = utils.GetRedisCli().Set(context.Background(), redisKey, val, expired).Result()
 	return err
 }
 
-func updateCachedUserinfo(user *model.User) error {
+func UpdateCachedUserInfo(user *model.User) error {
 	err := SetUserCacheInfo(user)
 	if err != nil {
 		redisKey := constant.UserInfoPrefix + user.Name
-		utils.GetRedisCli().Del(redisKey).Result()
+		utils.GetRedisCli().Del(context.Background(), redisKey).Result()
 	}
 	return err
 }
 
-func GetTokenInfo(token string) (*model.User, error) {
-	redisKey := constant.TokenKeyPrefix + token
-	val, err := utils.GetRedisCli().Get(redisKey).Result()
+func GetSessionInfo(session string) (*model.User, error) {
+	redisKey := constant.SessionKeyPrefix + session
+	val, err := utils.GetRedisCli().Get(context.Background(), redisKey).Result()
 	if err != nil {
 		return nil, err
 	}
@@ -52,19 +52,19 @@ func GetTokenInfo(token string) (*model.User, error) {
 	return user, err
 }
 
-func SetTokenInfo(user *model.User, token string) error {
-	redisKey := constant.TokenKeyPrefix + token
+func SetSessionInfo(user *model.User, session string) error {
+	redisKey := constant.SessionKeyPrefix + session
 	val, err := json.Marshal(&user)
 	if err != nil {
 		return err
 	}
-	expired := time.Second * time.Duration(config.GetGlobalConf().Cache.TokenExpired)
-	_, err = utils.GetRedisCli().Set(redisKey, val, expired).Result()
+	expired := time.Second * time.Duration(config.GetGlobalConf().Cache.SessionExpired)
+	_, err = utils.GetRedisCli().Set(context.Background(), redisKey, val, expired).Result()
 	return err
 }
 
-func DelTokenInfo(token string) error {
-	redisKey := constant.TokenKeyPrefix + token
-	_, err := utils.GetRedisCli().Del(redisKey).Result()
+func DelSessionInfo(session string) error {
+	redisKey := constant.SessionKeyPrefix + session
+	_, err := utils.GetRedisCli().Del(context.Background(), redisKey).Result()
 	return err
 }

@@ -16,13 +16,11 @@ type LoginRequest struct {
 
 // LogoutRequest 登出请求
 type LogoutRequest struct {
-	Token    string
 	UserName string
 }
 
 // GetUserInfoRequest 获取用户信息请求
 type GetUserInfoRequest struct {
-	Token    string
 	UserName string
 }
 
@@ -36,8 +34,7 @@ type GetUserInfoResponse struct {
 
 // UpdateUserInfoRequest 修改用户信息返回结构
 type UpdateUserInfoRequest struct {
-	Token    string
-	UserName string
+	UserName string // 不可更改
 	Age      int
 	Gender   string
 	PassWord string
