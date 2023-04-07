@@ -10,32 +10,32 @@ type RegisterRequest struct {
 
 // LoginRequest 登陆请求
 type LoginRequest struct {
-	UserName string `json:"name"`
-	PassWord string `json:"password"`
+	UserName string `json:"user_name"`
+	PassWord string `json:"pass_word"`
 }
 
 // LogoutRequest 登出请求
 type LogoutRequest struct {
-	UserName string
+	UserName string `json:"user_name"`
 }
 
 // GetUserInfoRequest 获取用户信息请求
 type GetUserInfoRequest struct {
-	UserName string
+	UserName string `json:"user_name"`
 }
 
 // GetUserInfoResponse 获取用户信息返回结构
 type GetUserInfoResponse struct {
-	UserName string
-	Age      int
-	Gender   string
-	PassWord string
+	UserName string `json:"user_name"`
+	Age      int    `json:"age"`
+	Gender   string `json:"gender"`
+	PassWord string `json:"pass_word"`
 }
 
 // UpdateUserInfoRequest 修改用户信息返回结构
 type UpdateUserInfoRequest struct {
-	UserName string // 不可更改
-	Age      int
-	Gender   string
-	PassWord string
+	UserName string `json:"user_name"`
+	Age      int    `json:"age"`
+	Gender   string `json:"gender"`
+	PassWord string `json:"pass_word"`
 }

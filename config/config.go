@@ -46,7 +46,7 @@ type AppConf struct {
 // RedisConf 配置
 type RedisConf struct {
 	Host     string `yaml:"rhost" mapstructure:"rhost"` // db主机地址
-	Port     string `yaml:"rport" mapstructure:"rport"` // db端口
+	Port     int    `yaml:"rport" mapstructure:"rport"` // db端口
 	DB       int    `yaml:"rdb" mapstructure:"rdb"`
 	PassWord string `yaml:"passwd" mapstructure:"passwd"`
 	PoolSize int    `yaml:"poolsize" mapstructure:"poolsize"`
@@ -78,6 +78,7 @@ func readConf() {
 	viper.SetConfigType("yml")
 	viper.AddConfigPath(".")
 	viper.AddConfigPath("./conf")
+	viper.AddConfigPath("../conf")
 	err := viper.ReadInConfig()
 	if err != nil {
 		panic("read config file err:" + err.Error())

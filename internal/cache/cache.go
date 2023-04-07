@@ -28,7 +28,7 @@ func SetUserCacheInfo(user *model.User) error {
 		return err
 	}
 	expired := time.Second * time.Duration(config.GetGlobalConf().Cache.UserExpired)
-	_, err = utils.GetRedisCli().Set(context.Background(), redisKey, val, expired).Result()
+	_, err = utils.GetRedisCli().Set(context.Background(), redisKey, val, expired*time.Second).Result()
 	return err
 }
 
@@ -59,7 +59,7 @@ func SetSessionInfo(user *model.User, session string) error {
 		return err
 	}
 	expired := time.Second * time.Duration(config.GetGlobalConf().Cache.SessionExpired)
-	_, err = utils.GetRedisCli().Set(context.Background(), redisKey, val, expired).Result()
+	_, err = utils.GetRedisCli().Set(context.Background(), redisKey, val, expired*time.Second).Result()
 	return err
 }
 

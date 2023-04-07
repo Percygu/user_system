@@ -66,7 +66,7 @@ func Login(ctx context.Context, req *LoginRequest) (string, error) {
 		return "", fmt.Errorf("login|SetSessionInfo fail:%v", err)
 	}
 
-	log.Infof("Login successfully, %s@%s with session %s", req.UserName, req.PassWord, session)
+	log.Infof("Login successfully, %s@%s with redis_session session_%s", req.UserName, req.PassWord, session)
 	return session, nil
 }
 
@@ -138,6 +138,7 @@ func getUserInfo(userName string) (*model.User, error) {
 	if err != nil {
 		log.Error("cache userinfo failed for user:", user.Name, " with err:", err.Error())
 	}
+	log.Infof("getUserInfo successfully, with key userinfo_%s", user.Name)
 	return user, nil
 }
 

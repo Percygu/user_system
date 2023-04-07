@@ -19,8 +19,8 @@ db:
 
 redis:
   rhost: "121.43.102.177"
-  raport: 6379
-  rdb: 1
+  rport: 8089
+  rdb: 0
   passwd: ''
   poolsize: 100
    

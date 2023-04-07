@@ -56,7 +56,7 @@ func Login(c *gin.Context) {
 	log.Infof("loggin start,user:%s, password:%s", req.UserName, req.PassWord)
 	session, err := service.Login(ctx, req)
 	if err != nil {
-		rsp.ResponseWithError(c, CodeLoginErr, "login err")
+		rsp.ResponseWithError(c, CodeLoginErr, err.Error())
 		return
 	}
 	// 登陆成功，设置cookie

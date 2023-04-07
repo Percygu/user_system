@@ -3,7 +3,7 @@ package constant
 const (
 	ReqUuid          = "uuid"
 	UserInfoPrefix   = "userinfo_"
-	SessionKeyPrefix = "token_"
+	SessionKeyPrefix = "session_"
 )
 
 const (
