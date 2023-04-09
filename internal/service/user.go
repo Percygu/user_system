@@ -23,7 +23,7 @@ func Register(req *RegisterRequest) error {
 		return fmt.Errorf("register|%v", err)
 	}
 	if existedUser != nil {
-		log.Errorf("23r23r2r2r23r32r2")
+		log.Errorf("用户已经注册,user_name==%s", req.UserName)
 		return fmt.Errorf("用户已经注册，不能重复注册")
 	}
 

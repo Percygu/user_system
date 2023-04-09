@@ -72,7 +72,6 @@
             passwd.focus();
             return;
         }
-
         $.ajax({
             type: "POST",
             dataType: "json",
@@ -86,14 +85,18 @@
                 "nick_name": nickname.value,
             }),
             success: function (result) {
-                console.log("data is :" + result)
                 if (result.code == 0) {
                     //alert("登陆成功");
                     window.location.href = urlPrefix + "/static/login.html";
                     window.event.returnValue = false
                 } else {
+                    console.log("result.code======",result.code)
                     alert("注册失败")
                 }
+            },
+            error:function (result) {
+                console.log("result.code======",result.code)
+                alert("注册失败")
             }
         });
 
