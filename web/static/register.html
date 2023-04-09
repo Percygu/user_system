@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="css/login.css"/>
+    <link rel="shortcut icon" href="images/favico.ico">
+    <script type="text/javascript" src="js/app.js"></script>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
+    <script src="http://www.gongjuji.net/Content/files/jquery.md5.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+<div class="imgcontainer">
+    <img src="images/camps.png" alt="Avatar" class="avatar">
+</div>
+
+<div class="container">
+    <label for="uname"><b>用户名</b></label>
+    <input id="username" type="text" placeholder="Enter Username" name="uname" required>
+
+    <label for="psw"><b>密码</b></label>
+    <input id="passwd" type="password" placeholder="Enter Password" name="psw" required>
+
+    <label for="unickame"><b>昵称</b></label>
+    <input id="nickname" type="text" placeholder="Enter NickName" name="nickname" required>
+
+    <label for="ugender"><b>性别</b></label>
+    <input id="gender" type="text" placeholder="Enter Gender" name="gender" required>
+
+    <label for="uage"><b>年龄</b></label>
+    <input id="age" type="number" placeholder="Enter Age" name="age" required>
+
+    <button type="submit" onclick="register()">注册</button>
+
+</div>
+
+</body>
+</html>
+
+
+<script>
+    function register() {
+        console.log("register！！！")
+        var username = document.getElementById("username")
+        var passwd = document.getElementById("passwd")
+        var nickname = document.getElementById("nickname")
+        var gender = document.getElementById("gender")
+        var age = document.getElementById("age")
+
+        if (username.value === "") {
+            username.focus();
+            return;
+        }
+
+        if (passwd.value === "") {
+            passwd.focus();
+            return;
+        }
+
+        if (nickname.value === "") {
+            passwd.focus();
+            return;
+        }
+
+        if (gender.value === "") {
+            passwd.focus();
+            return;
+        }
+
+        if (age.value === 0) {
+            passwd.focus();
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: urlPrefix + '/user/register',
+            contentType: "application/json",
+            data: JSON.stringify({
+                "user_name": username.value,
+                "pass_word": passwd.value,
+                "age": parseInt(age.value),
+                "gender": gender.value,
+                "nick_name": nickname.value,
+            }),
+            success: function (result) {
+                console.log("data is :" + result)
+                if (result.code == 0) {
+                    //alert("登陆成功");
+                    window.location.href = urlPrefix + "/static/login.html";
+                    window.event.returnValue = false
+                } else {
+                    alert("注册失败")
+                }
+            }
+        });
+
+
+        // var xhr = new XMLHttpRequest();
+        // xhr.open('post', urlPrefix + '/user/login')
+        // xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
+        // xhr.send('user_name=' + username.value + "&pass_word=" + $.md5(passwd.value))
+        // xhr.onreadystatechange = function () {
+        //     if (xhr.readyState === 4 && xhr.status === 200) {
+        //         console.log(xhr.responseText)
+        //         var json = eval("(" + xhr.responseText + ")");
+        //         console.log(json.code)
+        //         console.log(json.msg)
+        //         console.log(json.data)
+        //         if (json.code === 0) {
+        //             window.location.href = urlPrefix + "/static/index.html?name=" + username.value
+        //             window.event.returnValue = false
+        //         } else {
+        //             alert("账号或密码错误")
+        //             //window.location.href = urlPrefix + "/static/login.html"
+        //         }
+        //     }
+        // }
+    }
+</script>
+

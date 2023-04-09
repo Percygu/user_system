@@ -13,11 +13,11 @@ import (
 
 // Register 用户注册
 func Register(req *RegisterRequest) error {
-	if req.Name == "" || req.Password == "" || req.Age <= 0 || !utils.Contains([]string{constant.GenderMale, constant.GenderFeMale}, req.Gender) {
+	if req.UserName == "" || req.Password == "" || req.Age <= 0 || !utils.Contains([]string{constant.GenderMale, constant.GenderFeMale}, req.Gender) {
 		log.Errorf("register param invalid")
 		return fmt.Errorf("register param invalid")
 	}
-	existedUser, err := dao.GetUserByName(req.Name)
+	existedUser, err := dao.GetUserByName(req.UserName)
 	if err != nil {
 		log.Errorf("Register|%v", err)
 		return fmt.Errorf("register|%v", err)
@@ -28,12 +28,19 @@ func Register(req *RegisterRequest) error {
 	}
 
 	user := &model.User{
-		Name:     req.Name,
+		Name:     req.UserName,
 		Age:      req.Age,
 		Gender:   req.Gender,
 		PassWord: req.Password,
+		NickName: req.NickName,
+		CreateModel: model.CreateModel{
+			Creator: req.UserName,
+		},
+		ModifyModel: model.ModifyModel{
+			Modifier: req.UserName,
+		},
 	}
-
+	log.Infof("user ====== %+v", user)
 	if err := dao.CreateUser(user); err != nil {
 		log.Errorf("Register|%v", err)
 		return fmt.Errorf("register|%v", err)
