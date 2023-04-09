@@ -26,9 +26,12 @@ func InitRouterAndServe() {
 	// 用户登出
 	r.POST("/user/logout", AuthMiddleWare(), api.Logout)
 	// 获取用户信息
-	r.POST("/user/get_user_info", AuthMiddleWare(), api.GetUserInfo)
+	r.GET("/user/get_user_info", AuthMiddleWare(), api.GetUserInfo)
 	// 更新用户信息
 	r.POST("/user/update_user_info", AuthMiddleWare(), api.UpdateUserInfo)
+
+	r.Static("/static/", "./web/static/")
+	r.Static("/upload/images/", "./web/upload/images/")
 
 	// 启动server
 	port := config.GetGlobalConf().AppConfig.Port
