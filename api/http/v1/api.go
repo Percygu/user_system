@@ -87,16 +87,13 @@ func Logout(c *gin.Context) {
 
 // GetUserInfo 获取用户信息
 func GetUserInfo(c *gin.Context) {
+	userName := c.Query("username")
 	session, _ := c.Cookie(constant.SessionKey)
 	ctx := context.WithValue(context.Background(), constant.SessionKey, session)
-	req := &service.GetUserInfoRequest{}
-	rsp := &HttpResponse{}
-	err := c.ShouldBindJSON(req)
-	if err != nil {
-		log.Errorf("bind get user info request json err %v", err)
-		rsp.ResponseWithError(c, CodeBodyBindErr, err.Error())
-		return
+	req := &service.GetUserInfoRequest{
+		UserName: userName,
 	}
+	rsp := &HttpResponse{}
 	uuid := utils.Md5String(req.UserName + time.Now().GoString())
 	ctx = context.WithValue(ctx, "uuid", uuid)
 	userInfo, err := service.GetUserInfo(ctx, req)

@@ -109,6 +109,7 @@ func GetUserInfo(ctx context.Context, req *GetUserInfoRequest) (*GetUserInfoResp
 		Age:      user.Age,
 		Gender:   user.Gender,
 		PassWord: user.PassWord,
+		NickName: user.NickName,
 	}, nil
 }
 
@@ -122,6 +123,7 @@ func UpdateUserInfo(ctx context.Context, req *UpdateUserInfoRequest) error {
 func getUserInfo(userName string) (*model.User, error) {
 	user, err := cache.GetUserInfoFromCache(userName)
 	if err == nil && user.Name == userName {
+		log.Infof("cache_user ======= %v", user)
 		return user, nil
 	}
 
@@ -133,7 +135,7 @@ func getUserInfo(userName string) (*model.User, error) {
 	if user == nil {
 		return nil, fmt.Errorf("用户尚未注册")
 	}
-
+	log.Infof("user === %+v", user)
 	err = cache.SetUserCacheInfo(user)
 	if err != nil {
 		log.Error("cache userinfo failed for user:", user.Name, " with err:", err.Error())

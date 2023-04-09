@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="css/login.css"/>
+    <link rel="shortcut icon" href="images/favico.ico">
+    <script type="text/javascript" src="js/app.js"></script>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
+    <script src="http://www.gongjuji.net/Content/files/jquery.md5.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+    <div class="imgcontainer">
+        <img src="images/camps.png" alt="Avatar" class="avatar">
+    </div>
+
+    <div class="container">
+        <label for="uname"><b>用户名</b></label>
+        <input id="username" type="text" placeholder="Enter Username" name="uname" required>
+
+        <label for="psw"><b>密码</b></label>
+        <input id="passwd" type="password" placeholder="Enter Password" name="psw" required>
+
+        <button type="submit" onclick="login()">登入</button>
+
+    </div>
+
+</body>
+</html>
+
+
+<script>
+    function login() {
+        console.log("2222")
+        var username = document.getElementById("username")
+        var passwd = document.getElementById("passwd")
+
+        if (username.value === "") {
+            username.focus();
+            return;
+        }
+
+        if (passwd.value === "") {
+            passwd.focus();
+            return;
+        }
+        console.log("111111111111")
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: urlPrefix +'/user/login',
+            contentType: "application/json",
+            data:JSON.stringify({
+                "user_name": username.value,
+                "pass_word": passwd.value
+            }),
+            success: function (result) {
+                console.log("data is :" + result)
+                if (result.code == 0) {
+                    //alert("登陆成功");
+                    window.location.href = urlPrefix + "/static/index.html?name=" + username.value;
+                    window.event.returnValue = false
+                }else {
+                    alert("账号或密码错误")
+                }
+            }
+        });
+
+
+
+        // var xhr = new XMLHttpRequest();
+        // xhr.open('post', urlPrefix + '/user/login')
+        // xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
+        // xhr.send('user_name=' + username.value + "&pass_word=" + $.md5(passwd.value))
+        // xhr.onreadystatechange = function () {
+        //     if (xhr.readyState === 4 && xhr.status === 200) {
+        //         console.log(xhr.responseText)
+        //         var json = eval("(" + xhr.responseText + ")");
+        //         console.log(json.code)
+        //         console.log(json.msg)
+        //         console.log(json.data)
+        //         if (json.code === 0) {
+        //             window.location.href = urlPrefix + "/static/index.html?name=" + username.value
+        //             window.event.returnValue = false
+        //         } else {
+        //             alert("账号或密码错误")
+        //             //window.location.href = urlPrefix + "/static/login.html"
+        //         }
+        //     }
+        // }
+    }
+</script>
+
