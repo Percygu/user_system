@@ -91,7 +91,7 @@
 
     function logout() {
         var xhr = new XMLHttpRequest();
-        xhr.open('post', urlPrefix + '/logout')
+        xhr.open('post', urlPrefix + '/user/logout')
         xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
         xhr.send("username=" + from_username)
         console.log("send to logout")
@@ -120,21 +120,42 @@
             return
         }
 
-        var xhr = new XMLHttpRequest();
-        xhr.open('post', urlPrefix + '/editnickname')
-        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
-        xhr.send('newnickname=' + newNickname + "&username=" + from_username)
-        console.log("send to editnickname")
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState == 4 && xhr.status == 200) {
-                var json = eval("(" + xhr.responseText + ")");
-                if (json.code == 0) {
-                    alert('修改成功')
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: urlPrefix + '/user/update_nick_name',
+            contentType: "application/json",
+            data: JSON.stringify({
+                "user_name": username.value,
+                "new_nick_name": newNickname.value,
+            }),
+            success: function (result) {
+                if (result.code == 0) {
+                    alert("修改成功");e
                 } else {
-                    alert("修改失败:" + json.msg)
+                    alert("修改失败")
                 }
+            },
+            error:function (result) {
+                alert("修改失败")
             }
-        }
+        });
+
+        // var xhr = new XMLHttpRequest();
+        // xhr.open('post', urlPrefix + '/user/update_nick_name')
+        // xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
+        // xhr.send('new_nick_name=' + newNickname + "user_name=" + from_username)
+        // console.log("send to editnickname")
+        // xhr.onreadystatechange = function () {
+        //     if (xhr.readyState == 4 && xhr.status == 200) {
+        //         var json = eval("(" + xhr.responseText + ")");
+        //         if (json.code == 0) {
+        //             alert('修改成功')
+        //         } else {
+        //             alert("修改失败:" + json.msg)
+        //         }
+        //     }
+        // }
     }
 
     function upload() {

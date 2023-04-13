@@ -120,11 +120,30 @@ func GetUserInfo(ctx context.Context, req *GetUserInfoRequest) (*GetUserInfoResp
 	}, nil
 }
 
-func UpdateUserInfo(ctx context.Context, req *UpdateUserInfoRequest) error {
+func UpdateUserNickName(ctx context.Context, req *UpdateNickNameRequest) error {
 	uuid := ctx.Value(constant.ReqUuid)
 	session := ctx.Value(constant.SessionKey).(string)
 	log.Infof("%s|UpdateUserInfo access from,user_name=%s|session=%s", uuid, req.UserName, session)
-	return updateUserInfo(req, session)
+
+	if session == "" || req.UserName == "" {
+		return fmt.Errorf("UpdateUserNickName|request params invalid")
+	}
+
+	user, err := cache.GetSessionInfo(session)
+	if err != nil {
+		log.Errorf("%s|Failed to get with session=%s|err =%v", uuid, session, err)
+		return fmt.Errorf("UpdateUserNickName|GetSessionInfo err:%v", err)
+	}
+
+	if user.Name != req.UserName {
+		log.Errorf("UpdateUserNickName|%s|session info not match with username=%s", uuid, req.UserName)
+	}
+
+	updateUser := &model.User{
+		NickName: req.NewNickName,
+	}
+
+	return updateUserInfo(updateUser, req.UserName, session)
 }
 
 func getUserInfo(userName string) (*model.User, error) {
@@ -151,28 +170,12 @@ func getUserInfo(userName string) (*model.User, error) {
 	return user, nil
 }
 
-func updateUserInfo(req *UpdateUserInfoRequest, session string) error {
-	user := &model.User{}
-	if req.Age <= 0 {
-		return fmt.Errorf("user age is not valid")
-	}
-	user.Age = req.Age
-
-	if !utils.Contains([]string{constant.GenderMale, constant.GenderFeMale}, req.Gender) {
-		return fmt.Errorf("user gender is not valid")
-	}
-	user.Age = req.Age
-
-	if req.PassWord == "" {
-		return fmt.Errorf("user password is not valid")
-	}
-	user.PassWord = req.PassWord
-
-	affectedRows := dao.UpdateUserInfo(req.UserName, user)
+func updateUserInfo(user *model.User, userName, session string) error {
+	affectedRows := dao.UpdateUserInfo(userName, user)
 
 	// db更新成功
 	if affectedRows == 1 {
-		user, err := dao.GetUserByName(req.UserName)
+		user, err := dao.GetUserByName(userName)
 		if err == nil {
 			cache.UpdateCachedUserInfo(user)
 			if session != "" {
@@ -183,7 +186,7 @@ func updateUserInfo(req *UpdateUserInfoRequest, session string) error {
 				}
 			}
 		} else {
-			log.Error("Failed to get dbUserInfo for cache, username=%s with err:", req.UserName, err.Error())
+			log.Error("Failed to get dbUserInfo for cache, username=%s with err:", userName, err.Error())
 		}
 	}
 	return nil

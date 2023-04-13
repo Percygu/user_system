@@ -28,7 +28,7 @@ func InitRouterAndServe() {
 	// 获取用户信息
 	r.GET("/user/get_user_info", AuthMiddleWare(), api.GetUserInfo)
 	// 更新用户信息
-	r.POST("/user/update_user_info", AuthMiddleWare(), api.UpdateUserInfo)
+	r.POST("/user/update_nick_name", AuthMiddleWare(), api.UpdateNickName)
 
 	r.Static("/static/", "./web/static/")
 	r.Static("/upload/images/", "./web/upload/images/")

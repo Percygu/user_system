@@ -34,10 +34,8 @@ type GetUserInfoResponse struct {
 	NickName string `json:"nick_name"`
 }
 
-// UpdateUserInfoRequest 修改用户信息返回结构
-type UpdateUserInfoRequest struct {
-	UserName string `json:"user_name"`
-	Age      int    `json:"age"`
-	Gender   string `json:"gender"`
-	PassWord string `json:"pass_word"`
+// UpdateNickNameRequest 修改用户信息返回结构
+type UpdateNickNameRequest struct {
+	UserName    string `json:"user_name"`
+	NewNickName string `json:"new_nick_name"`
 }

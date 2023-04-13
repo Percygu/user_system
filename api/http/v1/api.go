@@ -104,9 +104,9 @@ func GetUserInfo(c *gin.Context) {
 	rsp.ResponseWithData(c, userInfo)
 }
 
-// UpdateUserInfo 更新用户信息
-func UpdateUserInfo(c *gin.Context) {
-	req := &service.UpdateUserInfoRequest{}
+// UpdateNickName 更新用户昵称
+func UpdateNickName(c *gin.Context) {
+	req := &service.UpdateNickNameRequest{}
 	rsp := &HttpResponse{}
 	err := c.ShouldBindJSON(req)
 	if err != nil {
@@ -114,9 +114,11 @@ func UpdateUserInfo(c *gin.Context) {
 		rsp.ResponseWithError(c, CodeBodyBindErr, err.Error())
 		return
 	}
+	session, _ := c.Cookie(constant.SessionKey)
+	ctx := context.WithValue(context.Background(), constant.SessionKey, session)
 	uuid := utils.Md5String(req.UserName + time.Now().GoString())
-	ctx := context.WithValue(context.Background(), "uuid", uuid)
-	if err := service.UpdateUserInfo(ctx, req); err != nil {
+	ctx = context.WithValue(context.Background(), "uuid", uuid)
+	if err := service.UpdateUserNickName(ctx, req); err != nil {
 		rsp.ResponseWithError(c, CodeUpdateUserInfoErr, err.Error())
 		return
 	}
