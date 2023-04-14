@@ -90,22 +90,34 @@
     }
 
     function logout() {
-        var xhr = new XMLHttpRequest();
-        xhr.open('post', urlPrefix + '/user/logout')
-        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
-        xhr.send("username=" + from_username)
         console.log("send to logout")
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState == 4 && xhr.status == 200) {
-                var json = eval("(" + xhr.responseText + ")");
-                if (json.code == 0) {
-                    alert('登出成功!')
-                    window.location.href = urlPrefix + "/static/login.html";
-                } else {
-                    alert("登出失败:" + json.msg)
-                }
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: urlPrefix + '/user/logout',
+            contentType: "application/json",
+            data: JSON.stringify({
+                "user_name": username.value,
+            }),
+            success: function (result) {
+                alert("登出成功");
+            },
+            error:function (result) {
+                alert("登出失败")
             }
-        }
+        });
+
+        // xhr.onreadystatechange = function () {
+        //     if (xhr.readyState == 4 && xhr.status == 200) {
+        //         var json = eval("(" + xhr.responseText + ")");
+        //         if (json.code == 0) {
+        //             alert('登出成功!')
+        //             window.location.href = urlPrefix + "/static/login.html";
+        //         } else {
+        //             alert("登出失败:" + json.msg)
+        //         }
+        //     }
+        // }
     }
 
     function changeNickName() {
@@ -119,7 +131,6 @@
             alert('昵称没有改变')
             return
         }
-
         $.ajax({
             type: "POST",
             dataType: "json",
@@ -127,11 +138,11 @@
             contentType: "application/json",
             data: JSON.stringify({
                 "user_name": username.value,
-                "new_nick_name": newNickname.value,
+                "new_nick_name": newNickname,
             }),
             success: function (result) {
                 if (result.code == 0) {
-                    alert("修改成功");e
+                    alert("修改成功");
                 } else {
                     alert("修改失败")
                 }
@@ -140,22 +151,6 @@
                 alert("修改失败")
             }
         });
-
-        // var xhr = new XMLHttpRequest();
-        // xhr.open('post', urlPrefix + '/user/update_nick_name')
-        // xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
-        // xhr.send('new_nick_name=' + newNickname + "user_name=" + from_username)
-        // console.log("send to editnickname")
-        // xhr.onreadystatechange = function () {
-        //     if (xhr.readyState == 4 && xhr.status == 200) {
-        //         var json = eval("(" + xhr.responseText + ")");
-        //         if (json.code == 0) {
-        //             alert('修改成功')
-        //         } else {
-        //             alert("修改失败:" + json.msg)
-        //         }
-        //     }
-        // }
     }
 
     function upload() {

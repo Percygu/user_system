@@ -77,7 +77,7 @@ func Logout(c *gin.Context) {
 		return
 	}
 	uuid := utils.Md5String(req.UserName + time.Now().GoString())
-	ctx = context.WithValue(context.Background(), "uuid", uuid)
+	ctx = context.WithValue(ctx, "uuid", uuid)
 	if err := service.Logout(ctx, req); err != nil {
 		rsp.ResponseWithError(c, CodeLogoutErr, err.Error())
 		return
@@ -115,11 +115,13 @@ func UpdateNickName(c *gin.Context) {
 		return
 	}
 	session, _ := c.Cookie(constant.SessionKey)
+	log.Infof("UpdateNickName|session=%s", session)
 	ctx := context.WithValue(context.Background(), constant.SessionKey, session)
 	uuid := utils.Md5String(req.UserName + time.Now().GoString())
-	ctx = context.WithValue(context.Background(), "uuid", uuid)
+	ctx = context.WithValue(ctx, "uuid", uuid)
 	if err := service.UpdateUserNickName(ctx, req); err != nil {
 		rsp.ResponseWithError(c, CodeUpdateUserInfoErr, err.Error())
 		return
 	}
+	rsp.ResponseSuccess(c)
 }

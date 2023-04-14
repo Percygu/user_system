@@ -123,7 +123,8 @@ func GetUserInfo(ctx context.Context, req *GetUserInfoRequest) (*GetUserInfoResp
 func UpdateUserNickName(ctx context.Context, req *UpdateNickNameRequest) error {
 	uuid := ctx.Value(constant.ReqUuid)
 	session := ctx.Value(constant.SessionKey).(string)
-	log.Infof("%s|UpdateUserInfo access from,user_name=%s|session=%s", uuid, req.UserName, session)
+	log.Infof("%s|UpdateUserNickName access from,user_name=%s|session=%s", uuid, req.UserName, session)
+	log.Infof("UpdateUserNickName|req==%v", req)
 
 	if session == "" || req.UserName == "" {
 		return fmt.Errorf("UpdateUserNickName|request params invalid")
