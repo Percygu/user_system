@@ -82,6 +82,7 @@ func Logout(c *gin.Context) {
 		rsp.ResponseWithError(c, CodeLogoutErr, err.Error())
 		return
 	}
+	c.SetCookie(constant.SessionKey, session, -1, "/", "", false, true)
 	rsp.ResponseSuccess(c)
 }
 

@@ -82,12 +82,19 @@ func Logout(ctx context.Context, req *LogoutRequest) error {
 	uuid := ctx.Value(constant.ReqUuid)
 	session := ctx.Value(constant.SessionKey).(string)
 	log.Infof("%s|Logout access from,user_name=%s|session=%s", uuid, req.UserName, session)
-	err := cache.DelSessionInfo(session)
+	// 要退出登录，必须要是在登录态
+	_, err := cache.GetSessionInfo(session)
+	if err != nil {
+		log.Errorf("%s|Failed to get with session=%s|err =%v", uuid, session, err)
+		return fmt.Errorf("Logout|GetSessionInfo err:%v", err)
+	}
+
+	err = cache.DelSessionInfo(session)
 	if err != nil {
 		log.Errorf("%s|Failed to delSessionInfo :%s", uuid, session)
 		return fmt.Errorf("del session err:%v", err)
 	}
-	log.Errorf("%s|Failed to delSessionInfo :%s", uuid, session)
+	log.Infof("%s|Success to delSessionInfo :%s", uuid, session)
 	return nil
 }
 

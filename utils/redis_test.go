@@ -23,3 +23,13 @@ func TestRedis(t *testing.T) {
 	t.Logf("val=%s", val)
 
 }
+
+func TestGetSession(t *testing.T) {
+	ctx := context.Background()
+	config.InitConfig()
+	val, err := GetRedisCli().Get(ctx, "session_abfc434dfbd8fd817449ce58438f8413").Result()
+	if err != nil {
+		t.Errorf("err=%v", err)
+	}
+	t.Logf("val=%s", val)
+}

@@ -25,10 +25,12 @@
     <label for="unickame"><b>昵称</b></label>
     <input id="nickname" type="text" placeholder="Enter NickName" name="nickname" required>
 
-    <label for="ugender"><b>性别</b></label>
-    <input id="gender" type="text" placeholder="Enter Gender" name="gender" required>
+    <select id="gender">
+        <option selected value="male">男</option>
+        <option value="female">女</option>
+    </select></br>
 
-    <label for="uage"><b>年龄</b></label>
+    </br><label for="uage"><b>年龄</b></label>
     <input id="age" type="number" placeholder="Enter Age" name="age" required>
 
     <button type="submit" onclick="register()">注册</button>
@@ -99,28 +101,6 @@
                 alert("注册失败")
             }
         });
-
-
-        // var xhr = new XMLHttpRequest();
-        // xhr.open('post', urlPrefix + '/user/login')
-        // xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
-        // xhr.send('user_name=' + username.value + "&pass_word=" + $.md5(passwd.value))
-        // xhr.onreadystatechange = function () {
-        //     if (xhr.readyState === 4 && xhr.status === 200) {
-        //         console.log(xhr.responseText)
-        //         var json = eval("(" + xhr.responseText + ")");
-        //         console.log(json.code)
-        //         console.log(json.msg)
-        //         console.log(json.data)
-        //         if (json.code === 0) {
-        //             window.location.href = urlPrefix + "/static/index.html?name=" + username.value
-        //             window.event.returnValue = false
-        //         } else {
-        //             alert("账号或密码错误")
-        //             //window.location.href = urlPrefix + "/static/login.html"
-        //         }
-        //     }
-        // }
     }
 </script>
 

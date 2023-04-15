@@ -101,23 +101,12 @@
             }),
             success: function (result) {
                 alert("登出成功");
+                window.location.href = urlPrefix + "/static/login.html";
             },
             error:function (result) {
                 alert("登出失败")
             }
         });
-
-        // xhr.onreadystatechange = function () {
-        //     if (xhr.readyState == 4 && xhr.status == 200) {
-        //         var json = eval("(" + xhr.responseText + ")");
-        //         if (json.code == 0) {
-        //             alert('登出成功!')
-        //             window.location.href = urlPrefix + "/static/login.html";
-        //         } else {
-        //             alert("登出失败:" + json.msg)
-        //         }
-        //     }
-        // }
     }
 
     function changeNickName() {
